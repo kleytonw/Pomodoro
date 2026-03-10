@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, Pressable } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
 import { useRef, useState } from "react";
 import { FokusButton } from "../componentes/FokusButton";
 import { ActionButton } from "../componentes/ActionButton";
