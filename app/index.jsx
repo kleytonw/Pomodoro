@@ -1,141 +1,83 @@
-import { Text, View, StyleSheet, Image } from "react-native";
-import { useRef, useState } from "react";
+import { Text, View, Image, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 import { FokusButton } from "../componentes/FokusButton";
-import { ActionButton } from "../componentes/ActionButton";
-import { Timer } from "../componentes/Timer";
-import { IconPause, IconPlay } from "../componentes/Icons";
-
-const pomodoro = [
-  {
-    id: 'focus',
-    initialValue: 25 * 60,
-    imagem: require('./pomodoro.png'),
-    display: 'Foco'
-  },
-  {
-    id: 'short',
-    initialValue: 5 * 60,
-    imagem: require('./short.png'),
-    display: 'Pausa curta'
-  },
-  {
-    id: 'long',
-    initialValue: 15 * 60,  
-    imagem: require('./long.png'),
-    display: 'Pausa longa'
-  }
-]
 
 export default function Index() {
-
-  const [timerType, setTimerType] = useState(pomodoro[0])
-
-  const [timerRunning, setTimerRunning] = useState(false)
-
-  const [seconds, setSeconds] = useState(pomodoro[0].initialValue)
-
-  const timerRef = useRef(null)
-
-  const clear = () => {
-    if (timerRef.current !== null) {
-      clearInterval(timerRef.current)
-      timerRef.current = null
-      setTimerRunning(false)
-    }
-  }
-
-  const toggleTimerType = (newTimerType) => {
-    setTimerType(newTimerType)
-    setSeconds(newTimerType.initialValue)
-    clear()
-  }
-
-  const toggleTimer = () => {
-    if(timerRef.current) {
-      // pausar
-      clear()
-      return 
-    }
-
-    setTimerRunning(true)
-    const id = setInterval(() => {
-      setSeconds(oldState => {
-        if (oldState === 0) {
-          clear()
-          return timerType.initialValue
-        }
-        return oldState - 1
-      })
-      console.log('timer rolando')
-    }, 1000)
-    timerRef.current = id
-  }
+  const router = useRouter();
 
   return (
-    <View
-      style={styles.container}
-    >
-      <Image source={timerType.imagem} />
-      <View style={styles.actions}>
-        <View style={styles.context}>
-          {pomodoro.map(p => (
-            <ActionButton 
-            key= {p.id}
-            active = { timerType.id === p.id }
-            onPress={() => toggleTimerType(p)}
-            display= {p.display}/>
-          ))}
-          </View>
-        <Timer totalSeconds={seconds} />
-        <FokusButton 
-        title={timerRunning ? 'Pausar' : 'Iniciar'}
-        icon={timerRunning ? <IconPause /> : <IconPlay />}
-        onPress={toggleTimer}/>
+    <View style={styles.container}>
+      <Image source={require("../assets/images/logo.png")} style={styles.image} />
+      
+      <View style={styles.inner}>
+        <Text style={styles.title}>
+          Otimize sua {"\n"} produtividade, {"\n"}
+          <Text style={styles.bold}>
+            mergulhe no que {"\n"} importa
+          </Text>
+        </Text>
+
+        <Image source={require("../assets/images/home.png")} style={styles.imagem2} />
+
+        <FokusButton
+          title="Quero iniciar!"
+          onPress={() => router.replace("/pomodoro")}
+          style={styles.startButton}
+          textStyle={styles.startButtonText}
+        />
       </View>
+
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           Projeto fictício e sem fins comerciais. Desenvolvido por Alura.
-       </Text>
+        </Text>
       </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: '#021123'
+    backgroundColor: "#021123",
   },
-  actions: {
-    paddingHorizontal: 24,
-    paddingVertical: 24,
-    backgroundColor: '#14448080',
-    width: '80%',
-    borderRadius: 32,
-    borderWidth: 2,
-    borderColor: '#144480',
-    gap: 32,
+  image: {
+    width: 156,
+    height: 40,
   },
-  context: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alingnItems: 'center',
+  imagem2: {
+    width: 317,
+    height: 266,
   },
-  timer: {
-    fontSize: 54,
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
+  inner: {
+    gap: 40,
+    alignItems: "center",
+  },
+  title: {
+    color: "#FFF",
+    textAlign: "center",
+    fontSize: 26,
+    marginTop: 40,
+  },
+  bold: {
+    fontWeight: "bold",
+  },
+  startButton: {
+    width: 220,
+    marginTop: 12,
+  },
+  startButtonText: {
+    fontSize: 18,
   },
   footer: {
-   width: '80%',
+    width: "80%",
+    marginTop: 24,
   },
   footerText: {
-    textAlign: 'center',
-    color: '#98A0A8',
+    textAlign: "center",
+    color: "#98A0A8",
     fontSize: 12.5,
   },
 });
